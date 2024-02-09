@@ -25,5 +25,4 @@ services:
       - traefik.http.routers.keycloak.tls.certresolver=letsencrypt
     volumes:
       - ${PWD}/env:/env:ro
-    entrypoint: bash -c 'source /env && /opt/keycloak/bin/kc.sh start $@'
-    command: --hostname=auth.${DOMAIN} --log-level=DEBUG
+    entrypoint: bash -c 'source /env && /opt/keycloak/bin/kc.sh start --hostname=auth.${DOMAIN} --log-level=DEBUG'
