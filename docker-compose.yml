@@ -28,7 +28,7 @@ services:
       - traefik.http.routers.keycloak.rule=Host(`auth.${DOMAIN}`)
       - traefik.http.routers.keycloak.tls=${IS_TLS}
       - traefik.http.routers.keycloak.tls.certresolver=letsencrypt
-    command: start --hostname=auth.${DOMAIN} --log-level=DEBUG
+    # command: start --hostname=auth.${DOMAIN} --log-level=DEBUG
     secrets:
       - db_username
       - db_password
