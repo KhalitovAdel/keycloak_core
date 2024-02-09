@@ -27,11 +27,11 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            echo "${{ secrets.DB_USERNAME }}" > app/db_username.txt
-            echo "${{ secrets.DB_PASSWORD }}" > app/db_password.txt
-            echo "${{ secrets.DB_URL }}" > app/db_url.txt
-            echo "${{ secrets.KEYCLOAK_USERNAME }}" > app/keycloak_username.txt
-            echo "${{ secrets.KEYCLOAK_PASSWORD }}" > app/keycloak_password.txt
+            echo "KC_DB_USERNAME=${{ secrets.DB_USERNAME }}" > app/env
+            echo "KC_DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> app/env
+            echo "KC_DB_URL=${{ secrets.DB_URL }}" >> app/env
+            echo "KEYCLOAK_ADMIN=${{ secrets.KEYCLOAK_USERNAME }}" >> app/env
+            echo "KEYCLOAK_ADMIN_PASSWORD=${{ secrets.KEYCLOAK_PASSWORD }}" >> app/env
             echo "SHA=${{ github.sha }}" > app/.env
             echo "DOMAIN=${{ vars.DOMAIN }}" >> app/.env
             docker compose -f app/docker-compose.yml up -d

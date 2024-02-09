@@ -13,12 +13,7 @@ services:
     <<: *x-default
     image: quay.io/keycloak/keycloak:21.1
     environment:
-      - KEYCLOAK_ADMIN_FILE=/run/secrets/keycloak_username
-      - KEYCLOAK_ADMIN_PASSWORD_FILE=/run/secrets/keycloak_password
       - KC_DB=postgres
-      - KC_DB_URL_FILE=/run/secrets/db_url
-      - KC_DB_USERNAME_FILE=/run/secrets/db_username
-      - KC_DB_PASSWORD_FILE=/run/secrets/db_password
       - KC_HTTP_ENABLED=true
       - KC_HOSTNAME_STRICT_HTTPS=false
       - KC_PROXY=edge
@@ -26,24 +21,9 @@ services:
       - traefik.enable=true
       - traefik.http.services.keycloak.loadbalancer.server.port=8080
       - traefik.http.routers.keycloak.rule=Host(`auth.${DOMAIN}`)
-      - traefik.http.routers.keycloak.tls=${IS_TLS}
+      - traefik.http.routers.keycloak.tls=true
       - traefik.http.routers.keycloak.tls.certresolver=letsencrypt
-    # command: start --hostname=auth.${DOMAIN} --log-level=DEBUG
-    secrets:
-      - db_username
-      - db_password
-      - db_url
-      - keycloak_username
-      - keycloak_password
-
-secrets:
-  db_username:
-    file: db_username.txt
-  db_password:
-    file: db_password.txt
-  db_url:
-    file: db_url.txt
-  keycloak_username:
-    file: keycloak_username.txt
-  keycloak_password:
-    file: keycloak_password.txt
+    volumes:
+      - ${PWD}/env:/env:ro
+    entrypoint: bash -c 'source env && /opt/keycloak/bin/kc.sh show-config $@'
+    command: --hostname=auth.${DOMAIN} --log-level=DEBUG
